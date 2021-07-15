@@ -55,7 +55,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
         }
         List<String> messages = validator.getMessages(result);
 
-        this.message = join(",", messages);
+        this.message = join("\n", messages);
         return false;
     }
 

@@ -1,5 +1,7 @@
 package main.softunigamestore.entities;
 
+import org.hibernate.annotations.FetchProfile;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,6 +19,17 @@ public class Game extends BaseEntity {
     private LocalDate releaseDate;
 
     public Game() {
+    }
+
+    public Game(String title, BigDecimal price, Double size, String trailer, String thumbnailURL, String description, LocalDate releaseDate) {
+        this.title =title;
+        this.price =price;
+        this.size = size;
+        this.trailer = trailer;
+        this.imageThumbnail = thumbnailURL;
+        this.description= description;
+        this.releaseDate = releaseDate;
+
     }
 
     @Column(name = "title")
