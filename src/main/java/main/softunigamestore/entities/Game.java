@@ -1,5 +1,6 @@
 package main.softunigamestore.entities;
 
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchProfile;
 
 import javax.persistence.*;

@@ -97,15 +97,45 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
             if (data.length == 1 && data[0].equals("Exit")) {
                 break;
             }
-            switch (data[0]) {
-                case "AddGame" -> addGame(Arrays.copyOfRange(data,1,data.length));
-                case "EditGame" -> editGame(Long.parseLong(data[1]),Arrays.copyOfRange(data,2,data.length));
-                case "DeleteGame" -> deleteGame(Long.parseLong(data[1]));
-                case "AllGames" -> listAllGames();
-                default -> System.out.println("Wrong command please try again or type Exit.");
+            if (currentUser.getAdministrator()) {
+                switch (data[0]) {
+                    case "AddGame" -> addGame(Arrays.copyOfRange(data, 1, data.length));
+                    case "EditGame" -> editGame(Long.parseLong(data[1]), Arrays.copyOfRange(data, 2, data.length));
+                    case "DeleteGame" -> deleteGame(Long.parseLong(data[1]));
+                    default -> System.out.println("Wrong command please try again or type Exit.");
+                }
+            } else {
+                switch (data[0]){
+                    case "AddItem" -> buyGame(Arrays.copyOfRange(data, 1, data.length));
+                    case "AllGames" -> listAllGames();
+                    case "DetailGame" -> getGameDetails(data[1]);
+                    case "OwnedGames" -> listOwnedGames();
+                }
             }
-
         }
+    }
+
+    private void buyGame(String[] copyOfRange) {
+
+    }
+
+    private void listOwnedGames() {
+        currentUser.getGames().forEach(game -> {
+            System.out.println(game.getTitle());
+        });
+    }
+
+    private void getGameDetails(String title) {
+        Game game = gameService.getGameByTitle(title);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        if (game != null){
+            System.out.printf("Title: %s\nPrice: %.2f\nDescription: %s\nRelease date: %s\n",
+                    game.getTitle(),
+                    game.getPrice(),
+                    game.getDescription(),
+                    formatter.format(game.getReleaseDate()));
+        }
+
     }
 
     private void listAllGames() {
@@ -146,16 +176,21 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
         LocalDate releaseDate = LocalDate.parse(data[6], DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         Game game = new Game(title, price, size, trailer, thumbnailURL, description, releaseDate);
         if(GameValidator.isValid(game)) {
-            if (currentUser.getAdministrator()) {
-                if (gameService.getGameByTitle(game) == null) {
+                if (gameService.getGameByTitle(game.getTitle()) == null) {
                     gameService.addGame(game);
                     System.out.printf("Added %s\n", game.getTitle());
                 } else {
                     System.out.println("This game already exists!");
                 }
-            } else {
-                orderService.addToShoppingCart(game);
-            }
+//            else {
+//                try {
+//                    currentUser.getGames().add(game);
+//                    userService.updateUser(currentUser);
+//                }catch (Exception e){
+//                    System.out.println("You already own this game!");
+//                }
+////                orderService.addToShoppingCart(game);
+//            }
         } else {
             System.out.println(GameValidator.getMessages());
         }

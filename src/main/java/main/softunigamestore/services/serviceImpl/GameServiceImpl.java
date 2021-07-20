@@ -63,8 +63,10 @@ public class GameServiceImpl implements GameService {
         return gameRepository.findAll();
     }
 
+
+
     @Override
-    public Game getGameByTitle(Game game) {
-        return gameRepository.getByTitle(game.getTitle());
+    public Game getGameByTitle(String title) {
+        return gameRepository.getByTitle(title);
     }
 }

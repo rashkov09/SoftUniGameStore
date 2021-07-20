@@ -19,5 +19,5 @@ public interface GameService {
 
     List<Game> getAllGames();
 
-    Game getGameByTitle(Game game);
+    Game getGameByTitle(String title);
 }

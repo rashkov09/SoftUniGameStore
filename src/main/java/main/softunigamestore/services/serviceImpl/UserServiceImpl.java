@@ -31,4 +31,9 @@ public class UserServiceImpl implements UserService {
     public User getUserByEmail(String email) {
         return userRepository.getUserByEmailEquals(email);
     }
+
+    @Override
+    public void updateUser(User currentUser) {
+        userRepository.save(currentUser);
+    }
 }

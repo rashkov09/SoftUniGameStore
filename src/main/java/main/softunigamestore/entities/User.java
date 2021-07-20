@@ -3,10 +3,7 @@ package main.softunigamestore.entities;
 import main.softunigamestore.entities.validators.ValidEmail;
 import main.softunigamestore.entities.validators.ValidPassword;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -75,7 +72,7 @@ public class User  extends BaseEntity{
     }
 
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
 
     public Set<Game> getGames() {
         return games;
