@@ -95,15 +95,28 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
             switch (data[0]) {
                 case "AddGame" -> addGame(Arrays.copyOfRange(data,1,data.length));
                 case "EditGame" -> editGame(Long.parseLong(data[1]),Arrays.copyOfRange(data,2,data.length));
+                case "DeleteGame" -> deleteGame(Long.parseLong(data[1]));
                 default -> System.out.println("Wrong command please try again or type Exit.");
             }
 
         }
     }
 
+    private void deleteGame(long id) {
+            try{
+                Game game = gameService.getGame(id);
+                gameService.deleteGame(id);
+                System.out.printf("Deleted %s\n",game.getTitle());
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+    }
+
     private void editGame(long id, String[] data) {
         try {
+            Game game = gameService.getGame(id);
             gameService.editGame(id, data);
+            System.out.printf("Edited %s\n", game.getTitle());
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -122,6 +135,7 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
         if(GameValidator.isValid(game)) {
             if (currentUser.getAdministrator()) {
                 gameService.addGame(game);
+                System.out.printf("Added %s\n",game.getTitle());
             } else {
                 orderService.addToShoppingCart(game);
             }

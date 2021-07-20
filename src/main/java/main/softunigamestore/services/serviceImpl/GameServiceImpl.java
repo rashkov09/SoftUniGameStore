@@ -42,4 +42,18 @@ public class GameServiceImpl implements GameService {
             throw new Exception("Something went wrong! Please try again.");
         }
     }
+
+    @Override
+    public void deleteGame(long id) throws Exception {
+        try{
+            gameRepository.deleteById(id);
+        }catch (Exception e){
+            throw new Exception("Invalid game id.Please try again!");
+        }
+    }
+
+    @Override
+    public Game getGame(long id) {
+        return gameRepository.findGameById(id);
+    }
 }

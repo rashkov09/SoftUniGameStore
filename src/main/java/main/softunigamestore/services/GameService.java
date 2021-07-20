@@ -9,4 +9,8 @@ public interface GameService {
     void addGame(Game game);
 
     void editGame(long id, String[] data) throws Exception;
+
+    void deleteGame(long id) throws Exception;
+
+    Game getGame(long id);
 }
