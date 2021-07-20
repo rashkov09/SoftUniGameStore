@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class CommandLineRunnerImpl implements CommandLineRunner {
@@ -47,15 +48,19 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
             System.out.println("Welcome to SoftUni Game Store!");
             System.out.println("Type Exit to close the application.");
             System.out.print("Command: ");
-            String[] data = reader.readLine().split("\\|");
+            String[] data = reader.readLine().trim().split("\\|");
             if (data.length == 1 && data[0].equals("Exit")) {
                 break;
             }
-            switch (data[0]) {
-                case "LoginUser" -> userLogIn(data);
-                case "RegisterUser" -> userRegister(data);
-                case "Logout" -> logout();
-                default -> System.out.println("Wrong input, please try again!");
+            try {
+                switch (data[0]) {
+                    case "LoginUser" -> userLogIn(data);
+                    case "RegisterUser" -> userRegister(data);
+                    case "Logout" -> logout();
+                    default -> System.out.println("Wrong input, please try again!");
+                }
+            }catch (Exception e){
+                System.out.println("Wrong command. Please try again!");
             }
         }
     }
@@ -96,10 +101,18 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
                 case "AddGame" -> addGame(Arrays.copyOfRange(data,1,data.length));
                 case "EditGame" -> editGame(Long.parseLong(data[1]),Arrays.copyOfRange(data,2,data.length));
                 case "DeleteGame" -> deleteGame(Long.parseLong(data[1]));
+                case "AllGames" -> listAllGames();
                 default -> System.out.println("Wrong command please try again or type Exit.");
             }
 
         }
+    }
+
+    private void listAllGames() {
+        gameService.getAllGames()
+                .forEach(game -> {
+                    System.out.printf("%s %.2f\n",game.getTitle(),game.getPrice());
+                });
     }
 
     private void deleteGame(long id) {
@@ -134,8 +147,12 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
         Game game = new Game(title, price, size, trailer, thumbnailURL, description, releaseDate);
         if(GameValidator.isValid(game)) {
             if (currentUser.getAdministrator()) {
-                gameService.addGame(game);
-                System.out.printf("Added %s\n",game.getTitle());
+                if (gameService.getGameByTitle(game) == null) {
+                    gameService.addGame(game);
+                    System.out.printf("Added %s\n", game.getTitle());
+                } else {
+                    System.out.println("This game already exists!");
+                }
             } else {
                 orderService.addToShoppingCart(game);
             }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class GameServiceImpl implements GameService {
@@ -55,5 +56,15 @@ public class GameServiceImpl implements GameService {
     @Override
     public Game getGame(long id) {
         return gameRepository.findGameById(id);
+    }
+
+    @Override
+    public List<Game> getAllGames() {
+        return gameRepository.findAll();
+    }
+
+    @Override
+    public Game getGameByTitle(Game game) {
+        return gameRepository.getByTitle(game.getTitle());
     }
 }

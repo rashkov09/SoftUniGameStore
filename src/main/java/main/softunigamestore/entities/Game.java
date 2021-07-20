@@ -32,7 +32,7 @@ public class Game extends BaseEntity {
 
     }
 
-    @Column(name = "title")
+    @Column(name = "title" , unique = true, nullable = false)
 
     public String getTitle() {
         return title;

@@ -3,6 +3,9 @@ package main.softunigamestore.services;
 import main.softunigamestore.entities.Game;
 import main.softunigamestore.repositories.GameRepository;
 
+import java.util.Collection;
+import java.util.List;
+
 public interface GameService {
 
 
@@ -13,4 +16,8 @@ public interface GameService {
     void deleteGame(long id) throws Exception;
 
     Game getGame(long id);
+
+    List<Game> getAllGames();
+
+    Game getGameByTitle(Game game);
 }
